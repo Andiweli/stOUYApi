@@ -1,4 +1,4 @@
-# stOUYApi – Static OUYA API server for Raspberry Pi & OUYA
+# stOUYApi <br/> Static OUYA API server for Raspberry Pi & OUYA
 
 > Static API server to keep the **OUYA gaming console** working after the official server shutdown (2019) –  
 > optimized for **Raspberry Pi / Raspbian Lite** and extended with tools for custom game libraries (including **PlayJam GameStick** titles).
