@@ -1,50 +1,166 @@
-# stouyapi - Static OUYA API
+# stOUYApi – Static OUYA API server for Raspberry Pi & OUYA
 
-A static API for the OUYA gaming console that still lets you sign in and install games, despite the OUYA server shutdown in 2019.
+> Static API server to keep the **OUYA gaming console** working after the official server shutdown (2019) –  
+> optimized for **Raspberry Pi / Raspbian Lite** and extended with tools for custom game libraries (including **PlayJam GameStick** titles).
 
-> [!NOTE]
-> This is a modified repository - *mainly for personal use* - from [cweiske's stouyapi](https://github.com/cweiske/stouyapi) specifically for Raspberry Pi and Raspbian Lite OS. So I can use my own small tiny Raspberry Pi at home, modify and add my own library of [Playjam's GameStick](https://en.wikipedia.org/wiki/GameStick) games.
-> That's what I am currently working on: Implementing [some selected](https://github.com/andiweli/gamestick-assets) Playjam GameStick games into the OUYA API store.
+This repository is a **modified fork** of [cweiske's stouyapi](https://github.com/cweiske/stouyapi).  
+I use it mainly on a **small Raspberry Pi at home** to:
 
-<img width="2048" height="769" alt="image" src="https://github.com/user-attachments/assets/9cc41859-976f-475f-95e3-14ec3e349d1f" />
+- host my **own static OUYA API server**
+- keep my OUYA fully usable (sign-in, game details, install queue)
+- add and manage a **personal library of PlayJam’s GameStick games** inside the OUYA Discover store
 
+I am currently working on integrating **selected PlayJam GameStick titles** into the OUYA API store, so they appear like native OUYA store entries.
 
-## Setup
+---
 
-> [!NOTE]
-> Step-by-step setup instructions specific for Raspberry Pi can be found in the [HOWTO-SETUP](https://github.com/andiweli/stouyapi/blob/master/HOWTO-SETUP.md).
+## ✨ Highlights of this fork
 
+Compared to the original stouyapi:
 
-## Creating new JSON game files
+- 🧊 **Raspberry Pi–focused setup**  
+  – Documentation and HOWTO tuned for **Raspbian Lite**  
+  – Ideal for a low-power, always-on OUYA backend at home
 
-For a convenient editing I've added a browser-based JSON editor. It can load and save the neccessary data for a game file on the OUYA.
-Game files in JSON format generated with this editor can be used when compiling the www-data in the [HOWTO (step 3 Building API and HTML files)](https://github.com/andiweli/stouyapi/blob/master/HOWTO-SETUP.md#3---building-the-api-and-html-files).
+- 🕹️ **Custom GameStick integration**  
+  – Ability to add your own **PlayJam GameStick** titles to the OUYA storefront  
+  – Games appear in the Discover store and game details like “normal” OUYA titles
 
-<img width="1889" height="892" alt="image" src="https://github.com/user-attachments/assets/bf7e8c01-04bc-46b1-93a1-aba4fdb4b70b" />
+- 🧾 **Built-in browser JSON editor**  
+  – Web UI for editing **JSON game files**  
+  – Load, edit and save all required metadata for OUYA game entries  
+  – Generated JSON is directly usable when compiling API/HTML data (see HOWTO step 3)
 
+- 🌐 **Static OUYA API replacement**  
+  – Lets your OUYA **sign in and install games** even after the official servers shut down  
+  – Uses static JSON data generated from the OUYA game database (and your own additions)
 
-## Push to my OUYA
+- 📲 **“Push to my OUYA” install button**  
+  – Each HTML game detail page has a **Push to my OUYA** button  
+  – Click from your PC and your OUYA will automatically install the game
 
-stouyapi's HTML game detail page have a "Push to my OUYA" button that allows anyone to tell his own OUYA to install that game.
-It works without any user accounts, and is only based on IP addresses.
+- 🏠 **Self-hosted OUYA store**  
+  – Run your own OUYA Discover store at home on a Raspberry Pi  
+  – Keep OUYA usable long-term without relying on third-party servers
 
-If your PC that you click the Push button on and your OUYA have the same public IP address (IPv4 NAT), or the same IPv6 64bit prefix, then the OUYA will install the game within 5 minutes.
+---
 
-It will also work if you run stouyapi inside your local network, because all private IP addresses are mapped to a special "local" address.
+## 📸 Screenshots
 
-You can inspect your own download queue by simply opening ``/api/v1/queued_downloads`` in your browser.
+OUYA Discover store powered by stOUYApi:
 
+![OUYA Discover store using stOUYApi](https://github.com/user-attachments/assets/9cc41859-976f-475f-95e3-14ec3e349d1f)
 
-## See also
+---
 
-- https://gitlab.com/devirich/BrewyaOnOuya - alternative storefront
-- https://archive.org/details/ouyalibrary - Archived OUYA games
-- https://github.com/ouya-saviors/ouya-game-data/ - OUYA game data repository
+## ⚙️ Setup
 
-## Discoveries
+For detailed, Raspberry-Pi specific instructions, see:
 
-- data/data/tv.ouya/cache/ion/
+- `HOWTO-SETUP.md`
 
-  - image cache for main menu image
+That HOWTO covers:
 
-- Don't put a trailing slash into ``OUYA_SERVER_URL`` - it will make double slashes
+- preparing a **Raspberry Pi / Raspbian Lite**  
+- installing and configuring **Apache / PHP**  
+- pointing your OUYA to the new API server  
+- generating the static API data and HTML files
+
+In short, you will:
+
+- host stOUYApi on your Pi (e.g. `http://stouyapi.example.org`)  
+- change your OUYA’s `ouya_config.properties` to use that address as `OUYA_SERVER_URL` and `OUYA_STATUS_SERVER_URL`  
+- generate the API/HTML data from the OUYA game database (and your own custom games)  
+
+Once this is done, the OUYA will talk entirely to your **local static API** instead of the original, now-offline OUYA servers.
+
+---
+
+## 🧾 Creating new JSON game files (web editor)
+
+To make working with game metadata easier, this fork adds a **browser-based JSON editor**.
+
+- It runs directly on the stOUYApi web interface.  
+- You can **load** and **edit** all relevant fields for a game entry.  
+- On save, it creates or updates the JSON file used by the OUYA API.
+
+JSON files generated by this editor are compatible with the build process described in the HOWTO:
+
+- See `HOWTO-SETUP.md`, step 3: *“Building API and HTML files”*
+
+During that step, the JSON files are used to:
+
+- generate the static API responses under `/api/...`  
+- build the HTML game detail pages for the Discover store
+
+This makes it very convenient to add:
+
+- new OUYA games  
+- your own **PlayJam GameStick** titles  
+- homebrew entries or test games
+
+…without manually editing JSON in a text editor.
+
+![JSON editor screenshot is also included in the repo’s README on GitHub](https://github.com/user-attachments/assets/bf7e8c01-04bc-46b1-93a1-aba4fdb4b70b)
+
+---
+
+## 📲 “Push to my OUYA”
+
+stOUYApi’s HTML game detail pages include a **“Push to my OUYA”** button.
+
+How it works:
+
+- You browse the web discover store on your **PC**, click “Push to my OUYA” on a game.  
+- If your PC and your OUYA share the same **public IP address** (IPv4 NAT)  
+  – or the same IPv6 64-bit prefix – the OUYA will automatically **install the game within about 5 minutes**.
+
+It also works when you run stOUYApi **inside your local network**, because all private IP addresses are mapped to a special “local” address.
+
+You can inspect your OUYA’s install queue at any time by opening:
+
+- `/api/v1/queued_downloads`  
+
+…in your browser on the stOUYApi server.
+
+---
+
+## 🔍 Tips & Discoveries
+
+Some useful findings from working with the OUYA:
+
+- `data/data/tv.ouya/cache/ion/`  
+  – This is the **image cache** for main menu artwork on the OUYA.
+
+- Do **not** put a trailing slash into `OUYA_SERVER_URL`  
+  – A trailing slash will cause **double slashes** in requests (e.g. `http://stouyapi.example.org//api/...`), which may result in unexpected errors.
+
+---
+
+## 🔗 See also
+
+Related projects and resources:
+
+- `https://gitlab.com/devirich/BrewyaOnOuya` – alternative OUYA storefront  
+- `https://archive.org/details/ouyalibrary` – archived OUYA games  
+- `https://github.com/ouya-saviors/ouya-game-data/` – OUYA game data repository used to build the static API
+
+---
+
+## ℹ️ About
+
+**stOUYApi** is:
+
+- a **static OUYA API** implementation  
+- designed to keep the **OUYA gaming console** usable after the **2019 server shutdown**  
+- and in this fork: tuned for **Raspberry Pi / Raspbian Lite**, with tools to add personal game libraries (including **PlayJam GameStick** titles)
+
+It is based on:
+
+- Original project: [cweiske/stouyapi](https://github.com/cweiske/stouyapi)  
+- Live example / information: `ouya.cweiske.de`
+
+If this project helps keep your OUYA alive, consider starring the repository ⭐ so other OUYA owners can find it.
+
+**Keywords / topics:**  
+_ouya • static api • raspberry pi • raspbian • game stick • gamestick • homebrew • ouya store • discover store • self-hosted • stouyapi_
